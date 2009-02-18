@@ -11,8 +11,6 @@
 
 // Initialise Packages
 require_once('../inc/initialise.php');
-require_once('XML/RSS.php');
-require_once('HTTP/Request.php');
 
 // Initialise Defaults
 $now          = time();
