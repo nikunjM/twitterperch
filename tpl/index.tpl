@@ -40,7 +40,7 @@
 		[~ validate id='keyword'  	message=$text.keyword   append='error' ~]
 		[~ validate id='username' 	message=$text.username  append='error' ~]
 		[~ validate id='password' 	message=$text.password  append='error' ~]
-		[~* validate id='accValid' 	message=$text.accValid  append='error' *~]
+		[~ validate id='accValid' 	message=$text.accValid  append='error' ~]
 		
 		[~if $error~]
 			<h2>Ooops! Have Another Go</h2>

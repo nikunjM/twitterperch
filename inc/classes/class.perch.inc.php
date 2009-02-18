@@ -15,12 +15,16 @@ class twitterPerch
     * The class constructor.
 	*
     */
-	public function __construct(){}
+	public function __construct()
+	{
+		// Initialise Packages
+		require_once('XML/RSS.php');
+		require_once('HTTP/Request.php');
+	}
 	
    /**
     * Adds the user details to the list
     *
-	* @access 	public
 	* @param	array	$vars
 	* @return 	boolean
     */
@@ -80,7 +84,6 @@ class twitterPerch
     * We do this by getting the current timestamp and then selecting only the records that have a lastRun
     * timestamp of more then 60x60x24 = 86,400 seconds behind the current timestamp.
     * 
-	* @access 	public
 	* @param	integer	$now The sync'd timestamp to be used to build the rules to decide what records to run
 	* @param	array	$lag The accepted timelag between now and the recorded lastRun value
 	* @return 	boolean
@@ -108,7 +111,6 @@ class twitterPerch
   /**
     * Attempt to Auto Follow.
     * 
-	* @access 	public
 	* @param	string	$q The url-encoded version of the keyword(s) to search for on Twitter.
 	* @param	string	$username The username of the person wanting to do the auto follow.
 	* @param	string	$password The password of the person wanting to do the auto follow.
@@ -150,7 +152,6 @@ class twitterPerch
     * 
     * This prevents them from being run more often then is allowed.
     * 
-	* @access 	public
 	* @param	integer	$now The sync'd timestamp to be used to build the rules to decide what records to run
 	* @param	array	$lag The accepted timelag between now and the recorded lastRun value
 	* @return 	boolean
@@ -177,7 +178,6 @@ class twitterPerch
    /**
     * Store the activity of the AutoFollow script
     *
-	* @access 	public
 	* @param	integer	$runtime	 - The timestamp of when the script was run (unique identifier).
 	* @param	integer $recordCount - The number of records processed in this run
 	* @param	integer $followCount - The number of new follows in this script
@@ -202,6 +202,39 @@ class twitterPerch
 		if (PEAR::isError($affected)) return(false);
 		
 		return(true);
+	}
+
+   /**
+    * Checks the validity of the supplied Twitter credentials.
+    * 
+    * Will return false if the username/password combo fails to login.
+    *
+	* @param 	string  $username - The supplied Twitter username
+	* @param 	boolean $empty    - Optional flag, decides whether the email is optional or not
+	* @param 	array 	$params   - The extra parameters provided by SmartyValidate
+	* @param 	array 	$formvars - The other form variables provided by the form
+	* @return 	boolean			  - True if email exists, false if not.
+    */
+	public function isValidTwitterCredentials($username, $empty, &$params, &$formvars)
+	{
+		// Test Parameters
+		if (!isset($username) || !isset($formvars[$params['field2']])) return($empty);
+		
+		$username = cleanValue($username);
+		$password = $formvars[$params['field2']];
+		
+		$req = new HTTP_Request('http://twitter.com/account/verify_credentials.xml');
+		
+		$req->setMethod(HTTP_REQUEST_METHOD_POST);
+		$req->setBasicAuth($username, $password);
+		
+		$response     = $req->sendRequest();
+		$responseCode = $req->getResponseCode();
+		$responseBody = $req->getResponseBody();
+		
+		if($responseCode == '200') return(true);
+		
+		return(false);
 	}
 }
 

@@ -24,17 +24,17 @@ if(empty($_POST))
 {
 	SmartyValidate::connect($smarty, true);
 	
-	SmartyValidate::register_validator('keyword'  , 'keyword'  , 'notEmpty');
-	SmartyValidate::register_validator('username' , 'username' , 'notEmpty');
-	SmartyValidate::register_validator('password' , 'password' , 'notEmpty');
-	//SmartyValidate::register_validator('accValid' , 'accValid' , 'isValid');
+	SmartyValidate::register_validator('keyword'  , 'keyword'  			, 'notEmpty');
+	SmartyValidate::register_validator('username' , 'username' 			, 'isWord'  , false, true);
+	SmartyValidate::register_validator('password' , 'password:6'	    , 'isLength', false, true);
+	SmartyValidate::register_validator('accValid' , 'username:password' , 'isValid');
 }
 else
 {
 	SmartyValidate::connect($smarty);
 	
-	//SmartyValidate::register_object('tp', $tp);
-	//SmartyValidate::register_criteria('isValid' , 'tp->isValidTwitterCredentials');
+	SmartyValidate::register_object('tp', $tp);
+	SmartyValidate::register_criteria('isValid' , 'tp->isValidTwitterCredentials');
 	
 	if($valid=SmartyValidate::is_valid($_POST))
 	{

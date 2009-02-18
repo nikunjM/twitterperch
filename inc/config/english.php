@@ -17,9 +17,10 @@ $lang = array(
 	 ,				  'failure' => ''
 	 ,                'invalid' => ''
 	 ,			     'redirect' => ''
-	 ,                'keyword' => 'Please enter the term you want to track in the main field'
-	 ,               'username' => 'You\'ll need to enter your Twitter username.'
-	 ,				 'password' => 'You gotta put your password in too.'
+	 ,               'accValid' => 'Login to Twitter failed. Please check your username & password.'
+	 ,                'keyword' => 'Please enter the term you want to track in the main field.'
+	 ,               'username' => 'You\'ll need to enter a valid Twitter username.'
+	 ,				 'password' => 'You gotta put in a valid password too.'
 	)
 	
 );
