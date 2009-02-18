@@ -14,7 +14,8 @@
  The first thing to do to get your copy of the code wotrking is to install 
  the database.
  
- The database schema is simple, it's just a single table with the following fields.
+ The database schema is simple, it's just a two tables. One to store the keywords to track
+ and another to log the results from the auto folloe script. Below are their fields and structure.
  
  searches(id, keyword, username, password, datetime, ip, latestStatus)
  
@@ -25,6 +26,14 @@
  datetime		=> INTEGER
  ip				=> VARCHAR(15)
  latestStatus	=> INTEGER (Default:0)
+ lastRun		=> INTEGER
+ runNumber		=> INTEGER
+ 
+ autoFollowLog(runtime, recordCount, followCount)
+ 
+ runtime		=> INTEGER (identity, timestamp)
+ recordCount	=> INTEGER
+ followCount	=> INTEGER
  
 ********************************************************************
  ENVIRONMENT SETUP
