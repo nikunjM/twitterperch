@@ -15,45 +15,30 @@ require_once('XML/RSS.php');
 require_once('HTTP/Request.php');
 
 // Initialise Defaults
+$now          = time();
+$lag		  = 86400;
 $response	  = false;
 $responseCode = false;
-$responseBody = false;
+$recordCount  = 0;
+$followCount  = 0;
 
 // Start Twitter Perch
 $tp = new twitterPerch;
 
-$list = $tp->loadList();
+$list = $tp->loadList($now, $lag);
 
 foreach($list as $search)
 {
+	$recordCount++;
 	$q = urlencode($search['keyword']);
 	
-	$rss =& new XML_RSS("http://search.twitter.com/search.rss?q=".$q."&rpp=20&since_id=".$search['latestStatus']);
-	$rss->parse();
-	
-	foreach ($rss->getItems() as $item)
-	{
-		// Get username from Link
-		$tempname = substr($item['link'], 19 );
-		$position = strpos($tempname    , '/');
-		$username = substr($tempname    , 0, $position);
-		
-		// Get status from Link
-		$start  = strrpos($item['link'], '/statuses/');
-		$status =  substr($item['link'], ($start+10));
-		
-		// Follow User
-		$req = new HTTP_Request('http://twitter.com/friendships/create/'.$username.'.xml');
-		
-		$req->setMethod(HTTP_REQUEST_METHOD_POST);
-		$req->setBasicAuth($search['username'], $search['password']);
-	
-		$response     = $req->sendRequest();
-		$responseCode = $req->getResponseCode();
-		$responseBody = addslashes($req->getResponseBody());
-		
-		// Do something with the response if you want to...
-	}
+	$followCount = $followCount + $tp->process($q, $search['username'], $search['password'], 20);
 }
+
+// Update the lastRun values
+$tp->updateLastRun($now, $lag);
+
+// Add Activity To Log
+$tp->log($now, $recordCount, $followCount);
 
 ?>
