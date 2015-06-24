@@ -1,0 +1,1 @@
+Pick a keyword you are interested in, example google. Then anytime google is mentioned on Twitter you will be automatically following the people who mentioned your keyword. Simple as that!
